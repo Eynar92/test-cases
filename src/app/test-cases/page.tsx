@@ -1,3 +1,5 @@
+"use client"
+import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -8,14 +10,14 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card"
-import { mockTestCases } from "@/data/mock-test-cases"
+import { useTestCases } from "@/context/TestCasesContext"
 
 export default function TestCases() {
 
-    const testCases = mockTestCases
+    const { testCases } = useTestCases()
 
     return (
-        <main className="px-4 py-4 sm:px-8 lg:px-16">
+        <section>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {
                     testCases.map(test => (
@@ -55,16 +57,20 @@ export default function TestCases() {
                                 </div>
                             </CardContent>
                             <CardFooter className="flex justify-end">
-                                <Button
-                                    variant="link"
+                                <Link
+                                    href={`/test-cases/${test.id}`}
                                 >
-                                    View Details
-                                </Button>
+                                    <Button
+                                        variant="link"
+                                    >
+                                        View Details
+                                    </Button>
+                                </Link>
                             </CardFooter>
                         </Card>
                     ))
                 }
             </div>
-        </main>
+        </section>
     )
 }

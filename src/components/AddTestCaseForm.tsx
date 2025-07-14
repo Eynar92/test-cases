@@ -1,0 +1,208 @@
+"use client"
+
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useFieldArray, useForm } from "react-hook-form"
+import { z } from "zod"
+import { Button } from "./ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
+import { Input } from "./ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
+import { Textarea } from "./ui/textarea"
+
+const stepSchema = z.object({
+    action: z.string().min(5, "Action must be at least 5 characters"),
+    expected: z.string().min(5, "Expected result must be at least 5 characters"),
+    status: z.enum(["pending", "passed", "failed"]),
+})
+
+export const testCaseFormSchema = z.object({
+    title: z.string().min(3, "Title too short").max(120, "Title too long"),
+    feature: z.string().min(3, "Feature too short"),
+    status: z.enum(["pending", "passed", "failed"]),
+    description: z.string().default("No description").optional(),
+    steps: z.array(stepSchema).min(1, "At least one step is required"),
+})
+
+export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof testCaseFormSchema>) => void }) => {
+
+    type FormValues = z.infer<typeof testCaseFormSchema>;
+
+    const form = useForm<FormValues>({
+        resolver: zodResolver(testCaseFormSchema),
+        defaultValues: {
+            title: "",
+            feature: "",
+            status: "pending",
+            description: "No description",
+            steps: [{ action: "", expected: "", status: "pending" }],
+        },
+    })
+
+    const { fields, append, remove } = useFieldArray({
+        control: form.control,
+        name: "steps"
+    })
+
+    return (
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Title *</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter a title..." {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="feature"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Feature *</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Requisition..." {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Status</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select status" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="pending">Pending</SelectItem>
+                                    <SelectItem value="passed">Passed</SelectItem>
+                                    <SelectItem value="failed">Failed</SelectItem>
+                                    <SelectItem value="blocked">Blocked</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                {/*TODO Steps Section - I need to resolve in a better way */}
+                <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                        <h3 className="font-medium">Test Steps *</h3>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => append({ action: "", expected: "", status: "pending" })}
+                        >
+                            Add Step
+                        </Button>
+                    </div>
+
+                    {fields.map((field, index) => (
+                        <div key={field.id} className="space-y-3 p-4 border rounded-lg">
+                            <FormField
+                                control={form.control}
+                                name={`steps.${index}.action`}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Action #{index + 1}</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Click login button" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name={`steps.${index}.expected`}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Expected Result</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Redirect to dashboard" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name={`steps.${index}.status`}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Status</FormLabel>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select status" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="pending">Pending</SelectItem>
+                                                <SelectItem value="passed">Passed</SelectItem>
+                                                <SelectItem value="failed">Failed</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="description"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Description</FormLabel>
+                                        <FormControl>
+                                            <Textarea
+                                                placeholder="Describe the test case..."
+                                                className="resize-none"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            {fields.length > 1 && (
+                                <Button
+                                    type="button"
+                                    variant="destructive"
+                                    size="sm"
+                                    onClick={() => remove(index)}
+                                    className="mt-2"
+                                >
+                                    Remove Step
+                                </Button>
+                            )}
+                        </div>
+                    ))}
+                </div>
+
+                <Button type="submit" className="w-full">Save Test Case</Button>
+            </form>
+        </Form>
+    )
+}
