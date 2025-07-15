@@ -11,6 +11,8 @@ import {
     CardTitle
 } from "@/components/ui/card"
 import { useTestCases } from "@/context/TestCasesContext"
+import { DataTable } from "@/components/test-cases-table/data-table"
+import { columns } from "@/components/test-cases-table/columns"
 
 export default function TestCases() {
 
@@ -18,59 +20,7 @@ export default function TestCases() {
 
     return (
         <section>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {
-                    testCases.map(test => (
-                        <Card key={test.id} className="hover:shadow-lg transition-shadow">
-                            <CardHeader>
-                                <div className="flex justify-between">
-                                    <CardTitle>{test.title}</CardTitle>
-                                    <Badge
-                                        className={
-                                            test.status === "passed"
-                                                ? 'bg-green-600'
-                                                : test.status === 'failed'
-                                                    ? 'bg-red-600'
-                                                    : 'bg-yellow-600'
-                                        }
-                                    >
-                                        {test.status.toUpperCase()}
-                                    </Badge>
-                                </div>
-                                <CardDescription className="line-clamp-2">
-                                    <p>{test.description}</p>
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="flex flex-wrap gap-2">
-                                    <Badge>{test.feature}</Badge>
-                                    {
-                                        test.tags.map(tag => (
-                                            <Badge
-                                                key={tag}
-                                                variant="outline"
-                                            >
-                                                {tag}
-                                            </Badge>
-                                        ))
-                                    }
-                                </div>
-                            </CardContent>
-                            <CardFooter className="flex justify-end">
-                                <Link
-                                    href={`/test-cases/${test.id}`}
-                                >
-                                    <Button
-                                        variant="link"
-                                    >
-                                        View Details
-                                    </Button>
-                                </Link>
-                            </CardFooter>
-                        </Card>
-                    ))
-                }
-            </div>
+            <DataTable columns={columns} data={testCases} />
         </section>
     )
 }
