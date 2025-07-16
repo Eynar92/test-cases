@@ -1,18 +1,18 @@
-type TestCaseStatus = "passed" | "failed" | "pending"
+type TestCaseStatus = "passed" | "failed" | "pending" | "blocked"
 type TestStepStatus = TestCaseStatus | "skipped" | "not_executed"
 
-interface TestStep {
-    action: string;
-    expected: string;
-    status: TestStepStatus;
+export interface TestStep {
+    action?: string;
+    expected?: string;
+    status?: TestStepStatus;
 }
 
 export interface TestCase {
     id: number;
     title: string;
-    feature: string;
+    feature?: string;
     status: TestCaseStatus;
     description?: string;
-    tags: string[];
+    tags?: string[];
     steps?: TestStep[]
 }
