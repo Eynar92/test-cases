@@ -21,7 +21,9 @@ export default function TestCaseDetail({
         <section className="max-w-4xl mx-auto p-6">
             <h1 className="text-3xl font-bold mb-4">{testCase.title}</h1>
             <div className="flex gap-2 mb-6">
-                <Badge>{testCase.feature}</Badge>
+                {testCase.feature &&
+                    <Badge>{testCase.feature}</Badge>
+                }
                 <Badge
                     className={
                         testCase.status === "passed"
@@ -34,27 +36,33 @@ export default function TestCaseDetail({
                     {testCase.status.toUpperCase()}
                 </Badge>
             </div>
-            <p className="text-lg mb-8">{testCase.description}</p>
+            {testCase.description ? (
+                <p className="text-lg mb-8">{testCase.description}</p>
+            ) : (
+                <span className="text-lg text-muted-foreground font-semibold">No description</span>
+            )}
 
             <h2 className="text-xl font-semibold mb-4">Steps</h2>
             <div className="space-y-4">
                 {
-                    testCase.steps ? (
+                    testCase.steps && testCase.steps.length > 0 ? (
                         testCase.steps.map((step, index) => (
                             <div key={index} className="border p-4 rounded-lg">
                                 <div className="flex justify-between">
                                     <h3 className="font-medium">Step {index + 1}</h3>
-                                    <Badge
-                                        className={
-                                            step.status === "passed"
-                                                ? "bg-green-600"
-                                                : step.status === "failed"
-                                                    ? "bg-red-600"
-                                                    : "bg-yellow-600"
-                                        }
-                                    >
-                                        {step.status.toUpperCase()}
-                                    </Badge>
+                                    {step.status &&
+                                        <Badge
+                                            className={
+                                                step.status === "passed"
+                                                    ? "bg-green-600"
+                                                    : step.status === "failed"
+                                                        ? "bg-red-600"
+                                                        : "bg-yellow-600"
+                                            }
+                                        >
+                                            {step.status.toUpperCase()}
+                                        </Badge>
+                                    }
                                 </div>
                                 <p><span className="font-semibold">Action:</span> {step.action}</p>
                                 <p><span className="font-semibold">Expected:</span> {step.expected}</p>

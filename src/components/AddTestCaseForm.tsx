@@ -10,17 +10,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Textarea } from "./ui/textarea"
 
 const stepSchema = z.object({
-    action: z.string().min(5, "Action must be at least 5 characters"),
-    expected: z.string().min(5, "Expected result must be at least 5 characters"),
-    status: z.enum(["pending", "passed", "failed"]),
+    action: z.string().min(5, "Action must be at least 5 characters").optional(),
+    expected: z.string().min(5, "Expected result must be at least 5 characters").optional(),
+    status: z.enum(["pending", "passed", "failed"]).optional(),
 })
 
 export const testCaseFormSchema = z.object({
     title: z.string().min(3, "Title too short").max(120, "Title too long"),
-    feature: z.string().min(3, "Feature too short"),
-    status: z.enum(["pending", "passed", "failed"]),
-    description: z.string().default("No description").optional(),
-    steps: z.array(stepSchema).min(1, "At least one step is required"),
+    feature: z.string().min(3, "Feature too short").optional(),
+    status: z.enum(["pending", "passed", "failed", "blocked"]),
+    description: z.string().optional(),
+    steps: z.array(stepSchema).optional(),
 })
 
 export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof testCaseFormSchema>) => void }) => {
@@ -31,10 +31,7 @@ export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof 
         resolver: zodResolver(testCaseFormSchema),
         defaultValues: {
             title: "",
-            feature: "",
             status: "pending",
-            description: "No description",
-            steps: [{ action: "", expected: "", status: "pending" }],
         },
     })
 
@@ -51,7 +48,7 @@ export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof 
                     name="title"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Title *</FormLabel>
+                            <FormLabel className="relative after:content-['*'] after:text-red-600">Title</FormLabel>
                             <FormControl>
                                 <Input placeholder="Enter a title..." {...field} />
                             </FormControl>
@@ -59,49 +56,58 @@ export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof 
                         </FormItem>
                     )}
                 />
+                <div className="flex gap-4">
+                    <FormField
+                        control={form.control}
+                        name="feature"
+                        render={({ field }) => (
+                            <FormItem className="basis-1/2">
+                                <FormLabel>Feature</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl className="w-full">
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a feature" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="requisition">Requisition</SelectItem>
+                                        <SelectItem value="job">Job</SelectItem>
+                                        <SelectItem value="candidate">Candidate</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
-                <FormField
-                    control={form.control}
-                    name="feature"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Feature *</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Requisition..." {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={form.control}
-                    name="status"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Status</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select status" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    <SelectItem value="pending">Pending</SelectItem>
-                                    <SelectItem value="passed">Passed</SelectItem>
-                                    <SelectItem value="failed">Failed</SelectItem>
-                                    <SelectItem value="blocked">Blocked</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
+                    <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                            <FormItem className="basis-1/2">
+                                <FormLabel>Status</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl className="w-full">
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select status" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="pending">Pending</SelectItem>
+                                        <SelectItem value="passed">Passed</SelectItem>
+                                        <SelectItem value="failed">Failed</SelectItem>
+                                        <SelectItem value="blocked">Blocked</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
                 {/*TODO Steps Section - I need to resolve in a better way */}
                 <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                        <h3 className="font-medium">Test Steps *</h3>
+                        <FormLabel>Test Steps</FormLabel>
                         <Button
                             type="button"
                             variant="outline"
@@ -186,7 +192,7 @@ export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof 
                                 )}
                             />
 
-                            {fields.length > 1 && (
+                            {fields.length > 0 && (
                                 <Button
                                     type="button"
                                     variant="destructive"

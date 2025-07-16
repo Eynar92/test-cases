@@ -2,8 +2,10 @@
 
 import {
     ColumnDef,
+    ColumnFiltersState,
     flexRender,
     getCoreRowModel,
+    getFilteredRowModel,
     getPaginationRowModel,
     useReactTable
 } from "@tanstack/react-table"
@@ -19,6 +21,9 @@ import {
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { useState } from "react";
+import { Input } from "../ui/input";
+import { AddTestCaseDialog } from "../AddTestCaseDialog";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -29,11 +34,17 @@ export function DataTable<TData, TValue>({
     columns,
     data
 }: DataTableProps<TData, TValue>) {
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        onColumnFiltersChange: setColumnFilters,
+        getFilteredRowModel: getFilteredRowModel(),
+        state: {
+            columnFilters,
+        },
         initialState: {
             pagination: {
                 pageSize: 10
@@ -43,6 +54,17 @@ export function DataTable<TData, TValue>({
 
     return (
         <div>
+            <div className="flex justify-between py-4">
+                <Input
+                    className="max-w-1/2"
+                    placeholder="Filter test cases"
+                    value={(table.getColumn('title')?.getFilterValue() as string) ?? ""}
+                    onChange={(event) =>
+                        table.getColumn('title')?.setFilterValue(event.target.value)
+                    }
+                />
+                <AddTestCaseDialog />
+            </div>
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
@@ -88,8 +110,11 @@ export function DataTable<TData, TValue>({
                 </Table>
             </div>
             <div className="flex items-center justify-between px-2 py-4">
-                <div className="text-muted-foreground flex-1 text-sm">
-                    {table.getFilteredRowModel().rows.length} row(s) in total
+                <div
+                    className="text-muted-foreground flex-1 text-sm"
+                    title="Number of test cases"
+                >
+                    {table.getFilteredRowModel().rows.length} tc(s) in total
                 </div>
                 <div className="flex items-center space-x-6 lg:space-x-8">
                     <div className="flex items-center space-x-2">
@@ -104,7 +129,7 @@ export function DataTable<TData, TValue>({
                                 <SelectValue placeholder={table.getState().pagination.pageSize} />
                             </SelectTrigger>
                             <SelectContent side="top">
-                                {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+                                {[10, 20, 30, 40, 50].map((pageSize) => (
                                     <SelectItem key={pageSize} value={`${pageSize}`}>
                                         {pageSize}
                                     </SelectItem>

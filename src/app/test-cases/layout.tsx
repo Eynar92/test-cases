@@ -9,13 +9,6 @@ export default function TestCasesLayout({
 }) {
     return (
         <main className="px-4 py-4 sm:px-8 lg:px-16 space-y-4">
-            <header className="flex justify-between">
-                <Input
-                    placeholder="Search..."
-                    className="max-w-1/2"
-                />
-                <AddTestCaseDialog />
-            </header>
             {children}
         </main>
     );
