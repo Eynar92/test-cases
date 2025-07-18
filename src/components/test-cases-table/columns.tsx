@@ -49,12 +49,31 @@ export const columns: ColumnDef<TestCase>[] = [
             return <Badge
                 className={
                     parseStatus === "passed"
-                        ? 'bg-green-600'
+                        ? 'bg-green-100 text-green-600'
                         : parseStatus === 'failed'
-                            ? 'bg-red-600'
-                            : 'bg-yellow-600'
+                            ? 'bg-red-100 text-red-600'
+                            : 'bg-yellow-100 text-yellow-600'
                 }
             >{parseStatus.toUpperCase()}</Badge>
         }
+    },
+    {
+        accessorKey: "automationStatus",
+        header: "Automation",
+        cell: ({ row }) => {
+            const automationStatus: string = row.getValue("automationStatus");
+            return <Badge
+                variant="outline"
+                className={
+                    automationStatus === "automated"
+                        ? "bg-green-100 text-green-800"
+                        : automationStatus === "manual"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-gray-100 text-gray-800"
+                }
+            >
+                {automationStatus.toUpperCase()}
+            </Badge>
+        },
     },
 ]

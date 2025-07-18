@@ -120,3 +120,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .required-field::after {
+    content: '*';
+    color: var(--destructive); /* Usa tu variable de rojo */
+    margin-left: 0.125rem;
+  }
+}

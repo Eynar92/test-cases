@@ -1,4 +1,5 @@
 type TestCaseStatus = "passed" | "failed" | "pending" | "blocked"
+type TestCaseAutomationStatus = "automated" | "manual" | "deprecated"
 type TestStepStatus = TestCaseStatus | "skipped" | "not_executed"
 
 export interface TestStep {
@@ -12,6 +13,7 @@ export interface TestCase {
     title: string;
     feature?: string;
     status: TestCaseStatus;
+    automationStatus: TestCaseAutomationStatus;
     description?: string;
     tags?: string[];
     steps?: TestStep[]
