@@ -19,6 +19,7 @@ export const testCaseFormSchema = z.object({
     title: z.string().min(3, "Title too short").max(120, "Title too long"),
     feature: z.string().min(3, "Feature too short").optional(),
     status: z.enum(["pending", "passed", "failed", "blocked"]),
+    automationStatus: z.enum(["automated", "manual", "deprecated"]),
     description: z.string().optional(),
     steps: z.array(stepSchema).optional(),
 })
@@ -32,6 +33,7 @@ export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof 
         defaultValues: {
             title: "",
             status: "pending",
+            automationStatus: "manual"
         },
     })
 
@@ -48,7 +50,7 @@ export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof 
                     name="title"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel className="relative after:content-['*'] after:text-red-600">Title</FormLabel>
+                            <FormLabel className="required-field">Title</FormLabel>
                             <FormControl>
                                 <Input placeholder="Enter a title..." {...field} />
                             </FormControl>
@@ -56,12 +58,12 @@ export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof 
                         </FormItem>
                     )}
                 />
-                <div className="flex gap-4">
+                <div className="grid grid-cols-3 gap-4">
                     <FormField
                         control={form.control}
                         name="feature"
                         render={({ field }) => (
-                            <FormItem className="basis-1/2">
+                            <FormItem>
                                 <FormLabel>Feature</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl className="w-full">
@@ -84,8 +86,8 @@ export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof 
                         control={form.control}
                         name="status"
                         render={({ field }) => (
-                            <FormItem className="basis-1/2">
-                                <FormLabel>Status</FormLabel>
+                            <FormItem>
+                                <FormLabel className="required-field">Status</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl className="w-full">
                                         <SelectTrigger>
@@ -97,6 +99,29 @@ export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof 
                                         <SelectItem value="passed">Passed</SelectItem>
                                         <SelectItem value="failed">Failed</SelectItem>
                                         <SelectItem value="blocked">Blocked</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="automationStatus"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="required-field">Automation Status</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl className="w-full">
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select status" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="automated">Automated</SelectItem>
+                                        <SelectItem value="manual">Manual</SelectItem>
+                                        <SelectItem value="deprecated">Deprecated</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
