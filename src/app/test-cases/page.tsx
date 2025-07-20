@@ -1,26 +1,18 @@
 "use client"
-import Link from "next/link"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle
-} from "@/components/ui/card"
-import { useTestCases } from "@/context/TestCasesContext"
-import { DataTable } from "@/components/test-cases-table/data-table"
-import { columns } from "@/components/test-cases-table/columns"
+import { useEffect } from "react"
+import { useTestCases } from "@/hooks/useTestCases"
+import { DataTable } from "@/components/features/test-cases/main-data-table/DataTable"
+import { columns } from "@/components/features/test-cases/main-data-table/columns"
 
 export default function TestCases() {
 
-    const { testCases } = useTestCases()
+    const { testCases, loading, fetchTestCases } = useTestCases()
+
+    useEffect(() => {
+        fetchTestCases()
+    }, []);
 
     return (
-        <section>
-            <DataTable columns={columns} data={testCases} />
-        </section>
+        <DataTable columns={columns} data={testCases} isLoading={loading} />
     )
 }

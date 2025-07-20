@@ -18,21 +18,24 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Button } from "../ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Button } from "../../../ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../ui/select";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { useState } from "react";
-import { Input } from "../ui/input";
-import { AddTestCaseDialog } from "../AddTestCaseDialog";
+import { Input } from "../../../ui/input";
+import { AddTestCaseDialog } from "../create-form/AddTestCaseDialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    data: TData[],
+    isLoading: boolean,
 }
 
 export function DataTable<TData, TValue>({
     columns,
-    data
+    data,
+    isLoading
 }: DataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const table = useReactTable({
@@ -86,7 +89,27 @@ export function DataTable<TData, TValue>({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
+                        {isLoading ? (
+                            [...Array(5)].map((_, i) => (
+                                <TableRow key={i}>
+                                    <TableCell>
+                                        <Skeleton className="h-5 w-[100px]" />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Skeleton className="h-5 w-[100px]" />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Skeleton className="h-5 w-[100px]" />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Skeleton className="h-5 w-[100px]" />
+                                    </TableCell>
+                                    <TableCell>
+                                        <Skeleton className="h-5 w-[100px]" />
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
@@ -99,24 +122,18 @@ export function DataTable<TData, TValue>({
                                     ))}
                                 </TableRow>
                             ))
-                        ) : (
-                            <TableRow>
-                                <TableCell colSpan={columns.length} className="h-24 text-center">
-                                    No results.
-                                </TableCell>
-                            </TableRow>
                         )}
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-between px-2 py-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 py-4">
                 <div
                     className="text-muted-foreground flex-1 text-sm"
                     title="Number of test cases"
                 >
                     {table.getFilteredRowModel().rows.length} tc(s) in total
                 </div>
-                <div className="flex items-center space-x-6 lg:space-x-8">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center space-x-6 lg:space-x-8">
                     <div className="flex items-center space-x-2">
                         <p className="text-sm font-medium">Rows per page</p>
                         <Select
@@ -137,7 +154,7 @@ export function DataTable<TData, TValue>({
                             </SelectContent>
                         </Select>
                     </div>
-                    <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+                    <div className="flex w-[100px] items-center justify-start sm:justify-center text-sm font-medium">
                         Page {table.getState().pagination.pageIndex + 1} of{" "}
                         {table.getPageCount()}
                     </div>

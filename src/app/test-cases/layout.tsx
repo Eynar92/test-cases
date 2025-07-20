@@ -1,4 +1,4 @@
-import { AddTestCaseDialog } from "@/components/AddTestCaseDialog";
+import { AddTestCaseDialog } from "@/components/features/test-cases/create-form/AddTestCaseDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
