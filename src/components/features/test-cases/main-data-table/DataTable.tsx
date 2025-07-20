@@ -18,12 +18,12 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Button } from "../ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Button } from "../../../ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../ui/select";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { useState } from "react";
-import { Input } from "../ui/input";
-import { AddTestCaseDialog } from "../AddTestCaseDialog";
+import { Input } from "../../../ui/input";
+import { AddTestCaseDialog } from "../create-form/AddTestCaseDialog";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
