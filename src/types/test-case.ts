@@ -3,9 +3,12 @@ type TestCaseAutomationStatus = "automated" | "manual" | "deprecated"
 type TestStepStatus = TestCaseStatus | "skipped" | "not_executed"
 
 export interface TestStep {
+    id?: number;
     action?: string;
     expected?: string;
     status?: TestStepStatus;
+    step_order?: number;
+    test_case_id?: number;
 }
 
 export interface TestCase {
@@ -13,8 +16,8 @@ export interface TestCase {
     title: string;
     feature?: string;
     status: TestCaseStatus;
-    automationStatus: TestCaseAutomationStatus;
+    automation_status: TestCaseAutomationStatus;
     description?: string;
     tags?: string[];
-    steps?: TestStep[]
+    test_steps?: TestStep[]
 }

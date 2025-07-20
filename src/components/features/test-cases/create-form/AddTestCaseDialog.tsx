@@ -2,23 +2,18 @@
 
 import { useState } from "react"
 import { AddTestCaseForm, testCaseFormSchema } from "./AddTestCaseForm"
-import { Button } from "./ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import z from "zod"
-import { useTestCases } from "@/context/TestCasesContext"
+import { useTestCases } from "@/hooks/useTestCases"
 
 export const AddTestCaseDialog = () => {
-    const {testCases, setTestCases} = useTestCases();
+    const { createTestCase } = useTestCases()
     const [open, setOpen] = useState(false);
 
-    const handleSubmit = (data: z.infer<typeof testCaseFormSchema>) => {
-        console.log("Form data:", data)
-        const newTestCase = {
-            ...data,
-            id: Date.now(),
-            tags: []
-        }
-        setTestCases([...testCases, newTestCase])
+    const handleSubmit = async (data: z.infer<typeof testCaseFormSchema>) => {
+        console.log({ data })
+        await createTestCase(data)
         setOpen(false)
     }
 

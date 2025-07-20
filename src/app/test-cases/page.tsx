@@ -1,26 +1,21 @@
 "use client"
-import Link from "next/link"
-import { Badge } from "@/components/ui/badge"
+import { useTestCases } from "@/hooks/useTestCases"
+import { DataTable } from "@/components/features/test-cases/main-data-table/DataTable"
+import { columns } from "@/components/features/test-cases/main-data-table/columns"
 import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle
-} from "@/components/ui/card"
-import { useTestCases } from "@/context/TestCasesContext"
-import { DataTable } from "@/components/test-cases-table/data-table"
-import { columns } from "@/components/test-cases-table/columns"
 
 export default function TestCases() {
 
-    const { testCases } = useTestCases()
+    const { testCases, loading, fetchTestCases } = useTestCases()
 
     return (
-        <section>
+        <div className="space-x-4">
+            <div className="flex justify-between">
+                <Button onClick={fetchTestCases} disabled={loading}>
+                    {loading ? "Loading..." : "Refresh"}
+                </Button>
+            </div>
             <DataTable columns={columns} data={testCases} />
-        </section>
+        </div>
     )
 }

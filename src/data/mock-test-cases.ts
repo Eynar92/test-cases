@@ -6,10 +6,10 @@ export const mockTestCases: TestCase[] = [
         title: "Candidate Application Submission",
         feature: "Application Workflow",
         status: "passed",
-        automationStatus: "manual",
+        automation_status: "manual",
         description: "Verify candidates can successfully submit job applications.",
         tags: ["Critical", "Submission"],
-        steps: [
+        test_steps: [
             {
                 action: "Fill required fields (name, email, resume)",
                 expected: "Form accepts valid input",
@@ -37,10 +37,10 @@ export const mockTestCases: TestCase[] = [
         title: "Recruiter Candidate Review",
         feature: "Recruiter Tools",
         status: "failed",
-        automationStatus: "automated",
+        automation_status: "automated",
         description: "Validate recruiter workflow for reviewing candidates.",
         tags: ["Recruiter", "Review"],
-        steps: [
+        test_steps: [
             {
                 action: "Login as recruiter",
                 expected: "Access to candidate dashboard",
@@ -68,10 +68,10 @@ export const mockTestCases: TestCase[] = [
         title: "Interview Scheduling",
         feature: "Scheduling",
         status: "pending",
-        automationStatus: "manual",
+        automation_status: "manual",
         description: "Test calendar integration for interview scheduling.",
         tags: ["Calendar", "Integration"],
-        steps: [
+        test_steps: [
             {
                 action: "Select candidate for interview",
                 expected: "Scheduling modal appears",
@@ -94,10 +94,10 @@ export const mockTestCases: TestCase[] = [
         title: "Candidate Status Update",
         feature: "Workflow Automation",
         status: "passed",
-        automationStatus: "manual",
+        automation_status: "manual",
         description: "Verify automated status updates trigger notifications.",
         tags: ["Notifications", "Automation"],
-        steps: [
+        test_steps: [
             {
                 action: "Recruiter changes status to 'Interview'",
                 expected: "Candidate receives email notification",
@@ -120,10 +120,10 @@ export const mockTestCases: TestCase[] = [
         title: "Reporting Dashboard",
         feature: "Analytics",
         status: "failed",
-        automationStatus: "deprecated",
+        automation_status: "deprecated",
         description: "Validate recruitment metrics reporting.",
         tags: ["Data", "Reporting"],
-        steps: [
+        test_steps: [
             {
                 action: "Generate 'Time-to-Hire' report",
                 expected: "Chart displays accurate metrics",
