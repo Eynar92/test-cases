@@ -127,6 +127,7 @@ export function DataTable<TData, TValue>({
                 </Table>
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 py-4">
+
                 <div
                     className="text-muted-foreground flex-1 text-sm"
                     title="Number of test cases"
@@ -155,6 +156,7 @@ export function DataTable<TData, TValue>({
                         </Select>
                     </div>
                     <div className="flex w-[100px] items-center justify-start sm:justify-center text-sm font-medium">
+
                         Page {table.getState().pagination.pageIndex + 1} of{" "}
                         {table.getPageCount()}
                     </div>

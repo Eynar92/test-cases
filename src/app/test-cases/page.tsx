@@ -7,7 +7,6 @@ import { columns } from "@/components/features/test-cases/main-data-table/column
 export default function TestCases() {
 
     const { testCases, loading, fetchTestCases } = useTestCases()
-
     useEffect(() => {
         fetchTestCases()
     }, []);
