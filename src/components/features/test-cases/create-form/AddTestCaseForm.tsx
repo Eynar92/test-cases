@@ -8,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { Loader2Icon } from "lucide-react"
 
 const stepSchema = z.object({
     action: z.string().min(5, "Action must be at least 5 characters").optional(),
@@ -24,7 +25,7 @@ export const testCaseFormSchema = z.object({
     steps: z.array(stepSchema).optional(),
 })
 
-export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof testCaseFormSchema>) => void }) => {
+export const AddTestCaseForm = ({ onSubmit, isLoading }: { onSubmit: (data: z.infer<typeof testCaseFormSchema>) => void, isLoading: boolean }) => {
 
     type FormValues = z.infer<typeof testCaseFormSchema>;
 
@@ -128,10 +129,28 @@ export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof 
                             </FormItem>
                         )}
                     />
+
                 </div>
+                <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Description</FormLabel>
+                            <FormControl className="w-full">
+                                <Textarea
+                                    placeholder="Describe the test case..."
+                                    className="resize-none"
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
                 {/*TODO Steps Section - I need to resolve in a better way */}
                 <div className="space-y-4">
-                    <div className="flex justify-between items-center">
+                    <div className="flex gap-4 items-center">
                         <FormLabel>Test Steps</FormLabel>
                         <Button
                             type="button"
@@ -199,24 +218,6 @@ export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof 
                                 )}
                             />
 
-                            <FormField
-                                control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Description</FormLabel>
-                                        <FormControl>
-                                            <Textarea
-                                                placeholder="Describe the test case..."
-                                                className="resize-none"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
                             {fields.length > 0 && (
                                 <Button
                                     type="button"
@@ -232,7 +233,13 @@ export const AddTestCaseForm = ({ onSubmit }: { onSubmit: (data: z.infer<typeof 
                     ))}
                 </div>
 
-                <Button type="submit" className="w-full">Save Test Case</Button>
+                <Button
+                    disabled={isLoading}
+                    type="submit"
+                    className="w-full"
+                >
+                    {isLoading ? <Loader2Icon className="animate-spin" /> : "Save Test Case"}
+                </Button>
             </form>
         </Form>
     )

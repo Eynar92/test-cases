@@ -10,10 +10,12 @@ import { useTestCases } from "@/hooks/useTestCases"
 export const AddTestCaseDialog = () => {
     const { createTestCase } = useTestCases()
     const [open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleSubmit = async (data: z.infer<typeof testCaseFormSchema>) => {
-        console.log({ data })
+        setIsLoading(true)
         await createTestCase(data)
+        setIsLoading(false)
         setOpen(false)
     }
 
@@ -29,7 +31,7 @@ export const AddTestCaseDialog = () => {
                 <DialogHeader>
                     <DialogTitle>Add a new Test Case</DialogTitle>
                 </DialogHeader>
-                <AddTestCaseForm onSubmit={handleSubmit} />
+                <AddTestCaseForm onSubmit={handleSubmit} isLoading={isLoading} />
             </DialogContent>
         </Dialog>
     )
