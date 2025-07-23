@@ -28,9 +28,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <header className="px-4 sm:px-8 py-4 lg:px-16">
-          <h1 className="text-2xl font-black">TestCases</h1>
-        </header>
         <TestCasesProvider>
           {children}
         </TestCasesProvider>
