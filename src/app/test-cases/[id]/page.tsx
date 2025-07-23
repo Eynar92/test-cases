@@ -26,21 +26,34 @@ export default function TestCaseDetail({
                     <div>Loading...</div>
                 ) : (
                     <section className="max-w-4xl mx-auto p-6">
-                        <h1 className="text-3xl font-bold mb-4">{testCase.title}</h1>
-                        <div className="flex gap-2 mb-6">
-                            {testCase.feature &&
-                                <Badge>{testCase.feature}</Badge>
-                            }
+                        <div className="flex justify-between items-center">
+                            <h1 className="text-3xl font-bold mb-4">{testCase.title}</h1>
                             <Badge
                                 className={
-                                    testCase.status === "passed"
+                                    `h-fit text-lg ${testCase.status === "passed"
                                         ? "bg-green-600"
                                         : testCase.status === "failed"
                                             ? "bg-red-600"
-                                            : "bg-yellow-600"
+                                            : "bg-yellow-600"}`
                                 }
                             >
                                 {testCase.status.toUpperCase()}
+                            </Badge>
+                        </div>
+                        <div className="flex gap-2 mb-6">
+                            {testCase.feature &&
+                                <Badge className="capitalize">{testCase.feature}</Badge>
+                            }
+                            <Badge
+                                className={
+                                    testCase.automation_status === "automated"
+                                        ? "bg-blue-100 text-blue-800"
+                                        : testCase.automation_status === "to-automate"
+                                            ? "bg-yellow-100 text-yellow-800"
+                                            : "bg-gray-100 text-gray-800"
+                                }
+                            >
+                                {testCase.automation_status.toUpperCase()}
                             </Badge>
                         </div>
                         {testCase.description ? (

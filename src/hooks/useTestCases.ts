@@ -20,6 +20,18 @@ export const useTestCases = () => {
         }
     };
 
+    const fetchTestCasesByFeature = async (feature: string) => {
+        setLoading(true);
+        try {
+            const data = await TestCasesService.getByFeature(feature);
+            setTestCases(data);
+        } catch (err) {
+            setError('Failed to fetch test cases');
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const fetchTestCase = async (id: string) => {
         setLoading(true);
         try {
@@ -44,5 +56,5 @@ export const useTestCases = () => {
             setError('Failed to create test case');
         }
     }
-    return { testCase, testCases, loading, error, fetchTestCase, fetchTestCases, createTestCase };
+    return { testCase, testCases, loading, error, fetchTestCase, fetchTestCases, fetchTestCasesByFeature, createTestCase };
 }

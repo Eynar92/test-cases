@@ -14,6 +14,15 @@ export const TestCasesService = {
         if (error || !data) throw new Error('Not found');
         return data
     },
+    getByFeature: async (feature: string): Promise<TestCase[]> => {
+        const { data, error } = await supabase
+            .from('test_cases')
+            .select('*')
+            .eq('feature', feature)
+
+        if (error || !data) throw new Error('Not found');
+        return data
+    },
     getWithSteps: async (id: string): Promise<TestCase> => {
         return httpClient.get<TestCase>("test_cases", id, {
             join: { table: "test_steps", on: "test_case_id" },

@@ -26,7 +26,12 @@ export const columns: ColumnDef<TestCase>[] = [
         header: "Feature",
         cell: ({ row }) => {
             const parseFeature: string = row.getValue("feature")
-            return <Badge variant="secondary">{parseFeature ? parseFeature : "Not Assigned"}</Badge>
+            return <Badge
+                className="capitalize"
+                variant="secondary"
+            >
+                {parseFeature ? parseFeature : "Not Assigned"}
+            </Badge>
         }
     },
     {
