@@ -1,5 +1,5 @@
 type TestCaseStatus = "passed" | "failed" | "pending" | "blocked"
-type TestCaseAutomationStatus = "automated" | "manual" | "deprecated"
+type TestCaseAutomationStatus = "automated" | "to-automate" | "manual" | "deprecated"
 type TestStepStatus = TestCaseStatus | "skipped" | "not_executed"
 
 export interface TestStep {

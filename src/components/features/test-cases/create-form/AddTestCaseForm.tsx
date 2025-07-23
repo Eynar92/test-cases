@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Loader2Icon } from "lucide-react"
+import { mockFeatures } from "@/data/mock-features"
 
 const stepSchema = z.object({
     action: z.string().min(5, "Action must be at least 5 characters").optional(),
@@ -20,7 +21,7 @@ export const testCaseFormSchema = z.object({
     title: z.string().min(3, "Title too short").max(120, "Title too long"),
     feature: z.string().min(3, "Feature too short").optional(),
     status: z.enum(["pending", "passed", "failed", "blocked"]),
-    automation_status: z.enum(["automated", "manual", "deprecated"]),
+    automation_status: z.enum(["automated", "to-automate", "manual", "deprecated"]),
     description: z.string().optional(),
     steps: z.array(stepSchema).optional(),
 })
@@ -73,7 +74,17 @@ export const AddTestCaseForm = ({ onSubmit, isLoading }: { onSubmit: (data: z.in
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="requisition">Requisition</SelectItem>
+                                        {
+                                            mockFeatures.map((feature, index) => (
+                                                <SelectItem
+                                                    key={index}
+                                                    value={feature}
+                                                    className="capitalize"
+                                                >
+                                                    {feature}
+                                                </SelectItem>
+                                            ))
+                                        }
                                         <SelectItem value="job">Job</SelectItem>
                                         <SelectItem value="candidate">Candidate</SelectItem>
                                     </SelectContent>
@@ -121,6 +132,7 @@ export const AddTestCaseForm = ({ onSubmit, isLoading }: { onSubmit: (data: z.in
                                     </FormControl>
                                     <SelectContent>
                                         <SelectItem value="automated">Automated</SelectItem>
+                                        <SelectItem value="to-automate">To Automate</SelectItem>
                                         <SelectItem value="manual">Manual</SelectItem>
                                         <SelectItem value="deprecated">Deprecated</SelectItem>
                                     </SelectContent>
