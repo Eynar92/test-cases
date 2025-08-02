@@ -4,22 +4,26 @@ import { TestCase } from "@/types/test-case";
 import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "../../../ui/badge";
 import Link from "next/link";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal } from "lucide-react";
+import { useState } from "react";
+import { DeleteModal } from "../DeleteModal";
+import { useTestCases } from "@/hooks/useTestCases";
+import { TestCaseDialog } from "../create-form/AddTestCaseDialog";
 
 export const columns: ColumnDef<TestCase>[] = [
     {
-        accessorKey: "id",
-        header: "Id"
-    },
-    {
         accessorKey: "title",
         header: "Title",
-        cell: ({ row }) => (
-            <Link
-                href={`/test-cases/${row.getValue('id')}`}
+        cell: ({ row }) => {
+            const testCase = row.original;
+            return <Link
+                href={`/test-cases/${testCase.id}`}
             >
                 {row.getValue("title")}
             </Link>
-        )
+        }
     },
     {
         accessorKey: "feature",
@@ -69,4 +73,59 @@ export const columns: ColumnDef<TestCase>[] = [
             </Badge>
         },
     },
+    {
+        id: "actions",
+        enableHiding: false,
+        cell: ({ row }) => {
+            const { deleteTestCase, loading } = useTestCases()
+            const testCase = row.original
+            const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+            const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+
+            const handleDelete = async () => {
+                await deleteTestCase(testCase.id)
+                setIsDeleteModalOpen(false)
+            }
+
+            return (
+                <>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                onClick={() => setIsEditModalOpen(true)}
+                            >
+                                Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => setIsDeleteModalOpen(true)}
+                            >
+                                Delete
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <TestCaseDialog
+                        mode="edit"
+                        testCase={testCase}
+                        open={isEditModalOpen}
+                        onOpenChange={setIsEditModalOpen}
+                    />
+                    <DeleteModal
+                        isOpen={isDeleteModalOpen}
+                        isLoading={loading}
+                        onClose={() => setIsDeleteModalOpen(false)}
+                        onConfirm={handleDelete}
+                        testCaseId={testCase.id}
+                    />
+                </>
+            )
+        }
+    }
 ]

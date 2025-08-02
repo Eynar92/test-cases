@@ -1,12 +1,16 @@
 import { supabase } from "../supabase/client";
 
 export interface HttpClient {
-    get<T>(endpoint: string, id?: string, options?: {
-        join?: { table: string; on: string };
-    }): Promise<T>;
+    get<T>(
+        endpoint: string,
+        id?: string,
+        options?: {
+            join?: { table: string; on: string };
+            filters?: Record<string, any>;
+        }): Promise<T>;
     post<T>(endpoint: string, body: unknown): Promise<T>;
     put<T>(endpoint: string, id: string, body: unknown): Promise<T>;
-    delete(endpoint: string, id: string): Promise<void>;
+    delete(endpoint: string, id: number): Promise<void>;
 }
 
 export class SupabaseHttpClient implements HttpClient {
@@ -15,6 +19,7 @@ export class SupabaseHttpClient implements HttpClient {
         id?: string,
         options?: {
             join?: { table: string; on: string };
+            filters: Record<string, any>;
         }
     ): Promise<T> {
         let query = supabase
@@ -23,6 +28,12 @@ export class SupabaseHttpClient implements HttpClient {
 
         if (id) {
             query = query.eq("id", id);
+        }
+
+        if (options?.filters) {
+            Object.entries(options.filters).forEach(([key, value]) => {
+                query = query.eq(key, value)
+            });
         }
 
         const { data, error } = await query;
@@ -48,7 +59,7 @@ export class SupabaseHttpClient implements HttpClient {
         return data as T;
     }
 
-    async delete(endpoint: string, id: string): Promise<void> {
+    async delete(endpoint: string, id: number): Promise<void> {
         const { error } = await supabase
             .from(endpoint)
             .delete()
