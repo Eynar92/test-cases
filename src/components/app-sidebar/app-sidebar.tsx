@@ -10,6 +10,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarTrigger,
 } from "@/components/ui/sidebar"
 
 const items = [
@@ -49,15 +50,19 @@ const items = [
 
 export function AppSidebar() {
     return (
-        <Sidebar>
-            <SidebarHeader>
-                <h1 className="text-2xl font-black">TestCases</h1>
+        <Sidebar collapsible="icon">
+            <SidebarHeader className="flex-row items-center justify-between gap-0 overflow-hidden">
+                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                    <h1 className="text-2xl font-black">
+                        <span className="size-8">SES</span>Busters</h1>
+                </div>
+                <SidebarTrigger />
             </SidebarHeader>
             <SidebarContent>
-                <SidebarGroup>
+                <SidebarGroup className="w-full">
                     <SidebarGroupLabel>Application</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu className="ml-4">
+                    <SidebarGroupContent className="w-full">
+                        <SidebarMenu className="ml-4 w-auto">
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>

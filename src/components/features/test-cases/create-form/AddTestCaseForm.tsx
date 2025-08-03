@@ -12,9 +12,11 @@ import { Loader2Icon } from "lucide-react"
 import { mockFeatures } from "@/data/mock-features"
 
 const stepSchema = z.object({
-    action: z.string().min(5, "Action must be at least 5 characters").optional(),
-    expected: z.string().min(5, "Expected result must be at least 5 characters").optional(),
-    status: z.enum(["pending", "passed", "failed"]).optional(),
+    id: z.number().optional(),
+    action: z.string().min(1, "Action is required"),
+    expected: z.string().min(1, "Expected result is required"),
+    status: z.enum(["pending", "passed", "failed", "skipped", "not_executed", "blocked"]),
+    step_order: z.number().optional()
 })
 
 export const testCaseFormSchema = z.object({
@@ -26,13 +28,21 @@ export const testCaseFormSchema = z.object({
     steps: z.array(stepSchema).optional(),
 })
 
-export const AddTestCaseForm = ({ onSubmit, isLoading }: { onSubmit: (data: z.infer<typeof testCaseFormSchema>) => void, isLoading: boolean }) => {
+export const AddTestCaseForm = ({
+    onSubmit,
+    isLoading,
+    defaultValues,
+}: {
+    onSubmit: (data: z.infer<typeof testCaseFormSchema>) => void,
+    isLoading: boolean,
+    defaultValues?: z.infer<typeof testCaseFormSchema>
+}) => {
 
     type FormValues = z.infer<typeof testCaseFormSchema>;
 
     const form = useForm<FormValues>({
         resolver: zodResolver(testCaseFormSchema),
-        defaultValues: {
+        defaultValues: defaultValues || {
             title: "",
             status: "pending",
             automation_status: "manual"

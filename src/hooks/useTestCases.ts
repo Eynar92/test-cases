@@ -56,5 +56,52 @@ export const useTestCases = () => {
             setError('Failed to create test case');
         }
     }
-    return { testCase, testCases, loading, error, fetchTestCase, fetchTestCases, fetchTestCasesByFeature, createTestCase };
+
+    const updateTestCase = async (testCaseData: TestCase) => {
+        setLoading(true);
+        try {
+            const updatedTestCase = await TestCasesService.update(
+                testCaseData.id.toString(),
+                testCaseData
+            );
+
+            setTestCases(prev => prev.map(tc =>
+                tc.id === testCaseData.id ? updatedTestCase : tc
+            ));
+            setTestCase(updatedTestCase);
+
+            return updatedTestCase;
+        } catch (err) {
+            console.error('Failed to update test case', err);
+            setError('Failed to update test case');
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const deleteTestCase = async (id: number) => {
+        setLoading(true);
+        try {
+            const data = await TestCasesService.delete(id);
+            console.log({ data })
+        } catch (err) {
+            setError('Failed to delete test case')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    return {
+        testCase,
+        testCases,
+        loading,
+        error,
+        fetchTestCase,
+        fetchTestCases,
+        fetchTestCasesByFeature,
+        createTestCase,
+        updateTestCase,
+        deleteTestCase,
+    };
 }

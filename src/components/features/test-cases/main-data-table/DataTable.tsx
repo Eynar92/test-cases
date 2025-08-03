@@ -23,7 +23,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { useState } from "react";
 import { Input } from "../../../ui/input";
-import { AddTestCaseDialog } from "../create-form/AddTestCaseDialog";
+import { TestCaseDialog } from "../create-form/AddTestCaseDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface DataTableProps<TData, TValue> {
@@ -38,6 +38,7 @@ export function DataTable<TData, TValue>({
     isLoading
 }: DataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [isCreateDialogOpen, setIsCreateDialogOpen] = useState<boolean>(false);
     const table = useReactTable({
         data,
         columns,
@@ -66,8 +67,13 @@ export function DataTable<TData, TValue>({
                         table.getColumn('title')?.setFilterValue(event.target.value)
                     }
                 />
-                <AddTestCaseDialog />
+                <Button onClick={() => setIsCreateDialogOpen(true)}>New Test Case</Button>
             </div>
+            <TestCaseDialog
+                mode="create"
+                open={isCreateDialogOpen}
+                onOpenChange={setIsCreateDialogOpen}
+            />
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
